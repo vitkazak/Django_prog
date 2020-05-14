@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+{{ article.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h2>{{ article.title }}</h2>
+    <div>
+        {% if article.tags.all %}
+            <i style="font-size: 14px" class="fa fa-tags"></i>
+            {% for tag in article.tags.all %}
+                <a href="{% url "home_by_tag" tag %}" style="font-size: 16px">{{ tag.name }}</a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div>
+        <a class="text-muted" href="{% url "user" article.user %}"> {{ article.user }}</a>
+        <p class="text-muted">  {{ article.timestamp }}</p>
+        <p align="justify"> {% autoescape off %}{{ article.text }}{% endautoescape %}</p>
+    </div>
+
+
+<td><a href="edit/">Изменить</a> | <a href="delete/{{Article.id}}">Удалить</a></td>
+{#<a href="{% url 'edit' %}" class="btn btn-default" style="font-size: 20px"> Изменить </a>#}
+
+    <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+    <script src="//yastatic.net/share2/share.js"></script>
+    <div class="ya-share2" data-services="vkontakte,facebook,twitter"></div>
+{#    <p>#}
+{#        {% load disqus_tags %}#}
+{#        {% disqus_show_comments %}#}
+{#    </p>#}
+  </div>
+
+{% endblock %}

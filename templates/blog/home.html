@@ -1,0 +1,67 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+Заметки
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        <div class="jumbotron vertical-center" style="background-image: url(https://static5.depositphotos.com/1004771/523/i/950/depositphotos_5232362-stock-photo-crayon-on-notebook.jpg); height: 325px; width: 1200px ">
+        </div>
+
+        {#ПОИСК#}
+        <form class="input-group" action="{% url "home_by_keyword" %}" method="GET">
+        {% csrf_token %}
+        <input type="text" name="keyword" size="30" placeholder="Поиск по заметкам"/>
+        <button class="btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </form>
+
+         {% for article in articles %}
+
+            <h3>
+                <a href="{% url 'article' article.id %}">{{ article.title }} </a>
+            </h3>
+
+            <div>
+                {% if article.tags.all %}
+                    <i style="font-size: 14px" class="fa fa-tags"></i>
+                    {% for tag in article.tags.all %}
+                        <a href="{% url "home_by_tag" tag %}" style="font-size: 16px">{{ tag.name }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <a class="text-muted" href="{% url "user" article.user %}"> {{ article.user }}</a>
+            <p class="text-muted">  {{ article.timestamp }}</p>
+
+            <div>{% autoescape off %}{{ article.preview }} {% endautoescape %}</div>
+
+{#            <p>#}
+{#                {% load disqus_tags %}#}
+{#                <a href="{% url 'article' article.id %}#disqus_thread" data-disqus-identifier="{{ object.id }}"> Нет комментариев</a>#}
+{#                {% disqus_num_replies %}#}
+{#            </p>#}
+        {% endfor %}
+
+    </div>
+    {% include "blog/pagination.html" with page=articles %}
+
+<form class="subscribe-form" action="{% url 'subscribe' %}" method="POST">{% csrf_token %}
+{{ form }}
+        <button class="btn btn-main btn-lg" type="submit">Подписаться!</button>
+    </form>
+
+{% if success %}
+    <div class="subscribe-result">
+{{ success }}
+    </div>
+{% endif %}
+<form id="subscribe" class="subscribe-form" action="{% url 'subscribe' %}" method="POST">
+{% csrf_token %}
+    <input type="text" name="email" size="30" placeholder="Введите Ваш e-mail"/>
+    <button class="btn btn-default btn-sm" type="submit">Подписаться!</button>
+</form>
+
+{% endblock %}

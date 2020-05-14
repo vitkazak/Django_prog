@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+  <style>
+   div {
+    background: #fc3; /* Цвет фона */
+    border: 2px solid black; /* Параметры рамки */
+    padding: 20px; /* Поля вокруг текста */
+    margin-top: 20%; /* Отступ сверху */
+   }
+  </style>
+
+{% block content %}
+
+{{ form.media }}
+
+    <form action="" method="POST">
+        <div>
+        {% csrf_token  %}
+        {{ form.as_p }}
+
+    <input type="submit" value="Сохранить" >
+     </div>
+    </form>
+
+
+{% endblock %}
+

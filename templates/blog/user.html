@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+{{ user.username }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+
+    <h2>Профиль {{ user_profile.username }}</h2>
+
+    <h3 style="margin-top: 30px"> Все заметки пользователя {{ user_profile.username }}:</h3>
+
+    {% for article in articles %}
+        <h3>
+            <a href="{% url 'article' article.id %}">{{ article.title }}</a>
+        </h3>
+            <div>
+                {% if article.tags.all %}
+                    <i style="font-size: 14px" class="fa fa-tags"></i>
+                    {% for tag in article.tags.all %}
+                        <a href="{% url "home_by_tag" tag %}" style="font-size: 16px">{{ tag.name }}</a>
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+        <p class="text-muted">
+            <a class="text-muted" href="{% url "user" article.user %}">{{ article.timestamp }}</a>
+        </p>
+        <div>{% autoescape off %}{{ article.preview }} {% endautoescape %} </div>
+
+{#        <p>#}
+{#            {% load disqus_tags %}#}
+{#            <a href="{% url 'article' article.id %}#disqus_thread" data-disqus-identifier="{{ object.id }}"> Нет комментариев</a>#}
+{#            {% disqus_num_replies %}#}
+{#        </p>#}
+
+    {% endfor %}
+
+    {% include "blog/pagination.html" with page=articles %}
+
+{% endblock %}

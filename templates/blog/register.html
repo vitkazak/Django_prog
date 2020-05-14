@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+{% block content %}
+
+    <h2> Регистрация </h2>
+    <form action="" method="post">
+      {% csrf_token %}
+            <p>
+                <label for="id_username">Имя пользователя: </label>
+                <input type="text" name="username" autofocus required id="id_username" maxlength="150" />
+            <p>
+                <label for="id_password1">Пароль: </label>
+                <input type="password" name="password1" required id="id_password1" style="margin-left: 71px"/>
+                <span class="helptext">
+                </span>
+            </p>
+            <p>
+                <label for="id_password2">Подтверждение: </label>
+                <input type="password" name="password2" required id="id_password2" style="margin-left: 14px" />
+                <span class="helptext">Для подтверждения введите, пожалуйста, пароль ещё раз.</span>
+            </p>
+      <button type="submit" class="btn btn-default">Зарегистрироваться</button>
+
+    </form>
+{% endblock %}
+

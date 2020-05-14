@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+Подписка
+{% endblock %}
+
+{% block content %}
+
+    <h2> Вы успешно подписаны </h2>
+
+    <script>
+      var delay = 5000;
+      setTimeout("document.location.href='/'", delay);
+    </script>
+    <p> Через 5 секунд Вы будете перенаправлены на домашнюю страницу.</p>
+    <p> Если Вы не перенаправлены автоматически, то перейдите самостоятельно: <a class="btn btn-default btn-sm" href='{% url 'home' %}'> На главную </a> </p>
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+Поиск
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        <h2>Заметки со словом "{{ keyword }}"</h2>
+
+        {% for article in articles %}
+            <h3>
+                <a href="{% url 'article' article.id %}">{{ article.title }} </a>
+                <div>
+                {% if article.tags.all %}
+                    <i style="font-size: 14px" class="fa fa-tags"></i>
+                    {% for tag in article.tags.all %}
+                    <a href="{% url "home_by_tag" tag %}" style="font-size: 16px">
+                        {{ tag.name }}
+                    </a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
+                </div>
+            </h3>
+            <p class="text-muted">
+               <a style="color: black" href="{% url "user" article.user %}"> {{ article.user }} - {{ article.timestamp }}</a>
+            <div>{% autoescape off %}{{ article.preview }} {% endautoescape %}</div>
+            <p>
+{#{% load disqus_tags %}#}
+{#<a href="{% url 'article' article.id %}#disqus_thread" data-disqus-identifier="{{ object.id }}"> Нет комментариев</a>#}
+{#{% disqus_num_replies %}#}
+            </p>
+        {% endfor %}
+    </div>
+{% endblock %}
