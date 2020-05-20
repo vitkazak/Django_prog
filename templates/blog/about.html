@@ -1,36 +1,17 @@
 {% extends 'blog/base.html' %}
 {% block title %}
-Авторы
+Люди
 {% endblock %}
 {% block content %}
 <div class="row">
-<h2> Авторы: </h2>
-{#    <head>#}
-{#    <style>#}
-{#	button.knopka {#}
-{#	color: #fff;#}
-{#	background: #a1c9ff;#}
-{#	padding: 2px;#}
-{#	border-radius: 5px;#}
-{#	border: 1px solid #8f9cff;#}
-{#	}#}
-{#	button.knopka:hover {#}
-{#	background: #8f9cff;#}
-{#	}#}
-{#    </style>#}
-{#</head>#}
-{% for friends in friends %}
+<h2> Люди: </h2>
+{% for users in users %}
 <h3>
-    <a href="{% url '' users.username %}"> {{users.username}} </a>
-
-{#	<button class="knopka" >Добавить</button>#}
-    {{ form.media }}
-    <form action="" method="POST">
-        {% csrf_token  %}
-        {{ form.as_p }}
-        <input class="btn-default" id="add_friend" type="submit" value="Добавить" />
-    </form>
+     {{users.username}}
 </h3>
+    <a href="{% url 'change_friends' operation='add' pk=users.pk %}">
+        <button type="button" class="btn btn-success">Добавить в друзья</button>
+    </a>
 {% endfor %}
 </div>
 {% endblock %}

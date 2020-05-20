@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
-from MyBlog.models import Article, User, Subscriber, Friend
+from MyBlog.models import Article, User, Subscriber, Friends
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import CreateView
@@ -56,7 +56,6 @@ def delete(request, article_id):
 
 
 def edit(request, article_id):
-
     try:
         article = Article.objects.get(id=article_id)
         form = EditForm(request.POST, instance=article)
@@ -71,8 +70,6 @@ def edit(request, article_id):
             return render(request, "blog/edit.html", {"form": form})
     except Article.DoesNotExist:
         return HttpResponseNotFound("<h2>Article not found</h2>")
-
-
 
 
 def show_user(request, username):
@@ -136,17 +133,6 @@ class AddArticle(CreateView):
         return super(AddArticle, self).form_valid(form)
 
 
-class AddFriend(CreateView):
-    model = Friend
-    fields = []
-    template_name = 'blog/users.html'
-    success_url = "/"
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(AddFriend, self).form_valid(form)
-
-
 def home_by_tag(request, tag):
     articles = Article.objects.filter(tags__name__in=[tag])
     paginator = Paginator(articles, 3)  # 3 posts in each page
@@ -195,17 +181,43 @@ class Subscribe(CreateView):
         return super(Subscribe, self).form_valid(form)
 
 
+# def show_users(request):
+#     users = User.objects.all().order_by('username')
+#     context = {
+#         'users': users,
+#     }
+#     return render(request, 'blog/users.html', context)
+
 def show_users(request):
     users = User.objects.all().order_by('username')
+
     context = {
         'users': users,
     }
-    return render(request, 'blog/users.html', context)
+    return render(request, 'blog/about.html', context)
 
 
 def show_friends(request):
-    friends = Friend.objects.all().order_by('user.username')
-    context = {
+    friend = Friends.objects.get(current_user=request.user)
+    friends = friend.users.all()
+    arg = {
         'friends': friends
     }
-    return render(request, 'blog/about.html', context)
+    return render(request, 'blog/users.html', arg)
+
+
+def get_current_path(request):
+    return {
+        'current_path': request.get_full_path()
+    }
+
+
+def change_friends(request, operation, pk):
+    new_friend = User.objects.get(pk=pk)
+    if operation == 'add':
+        curr = 'blog/about.html'
+        Friends.make_friend(request.user, new_friend)
+    elif operation == 'remove':
+        curr = 'blog/users.html'
+        Friends.lose_friend(request.user, new_friend)
+    return render(request, curr)

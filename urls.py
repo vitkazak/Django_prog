@@ -19,6 +19,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^', include('MyBlog.urls'))
+    # url(r'^', include('MyBlog.urls',namespace='main'))
+    path(r'^', include('MyBlog.urls', namespace='MyBlog'))
 ]
 
